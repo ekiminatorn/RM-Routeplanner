@@ -1,1 +1,5 @@
 node_modules/*
+
+rm-routeplanner-backend/package-lock.json
+rm-routeplanner-backend/node_modules/*
+rm-routeplanner-backend/config.js
