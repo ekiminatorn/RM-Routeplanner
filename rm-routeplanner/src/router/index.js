@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Planner from '../views/Planner.vue'
+import Planner from '../views/planner/Planner.vue'
 
 Vue.use(VueRouter)
 
