@@ -4,6 +4,13 @@
   </div>
 </template>
 
-<style lang="scss">
+<script>
 
+export default {
+
+}
+</script>
+
+<style lang="scss">
+    @import "@/assets/styles/global.scss";
 </style>

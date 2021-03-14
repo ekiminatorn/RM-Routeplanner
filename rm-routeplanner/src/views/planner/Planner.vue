@@ -1,9 +1,18 @@
 <template>
-    <div>Hello, this is the planner page!</div>
+    <div class="planner">
+        <NavBar/>
+    </div>
+    
 </template>
 
 <script>
+import NavBar from "@/components/planner/NavBar.vue";
+
 export default {
+    name: 'Planner',
+    components: {
+        NavBar
+    }
     
 }
 </script>
