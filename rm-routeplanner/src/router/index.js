@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Planner from '../views/planner/Planner.vue'
+import Places from '../views/planner/Places.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,13 @@ const routes = [
   {
     path: '/planner',
     name: 'Planner',
-    component: Planner
+    component: Planner,
+    children: [
+    {
+        path: '/planner/places',
+        component: Places
+    }
+    ]
   }
 ]
 

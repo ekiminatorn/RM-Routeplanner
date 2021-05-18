@@ -1,10 +1,14 @@
 <template>
-    <div class="home">Hello, this is the home page!</div>
+    <div class="places">
+        places
+    </div>
+    
 </template>
 
 <script>
+
 export default {
-    
+    name: 'Places'
 }
 </script>
 

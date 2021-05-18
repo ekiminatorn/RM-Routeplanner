@@ -1,6 +1,7 @@
 <template>
-    <div class="planner">
-        <NavBar/>
+    <div class="planner" id="planner">
+        <NavBar :name="$route.path" />
+        <router-view></router-view>
     </div>
     
 </template>
@@ -19,5 +20,9 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.planner {
+    transition: margin-left .5s;
+}
 
 </style>
