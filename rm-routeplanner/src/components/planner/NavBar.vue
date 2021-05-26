@@ -9,6 +9,12 @@
             <button type="button" class="btn btn-light">Uusi kohde</button>
             <button type="button" class="btn btn-success">Tallenna</button>
         </div>
+
+        <!-- Planner Vehicles buttons -->
+        <div v-if="pagePath === '/planner/vehicles'">
+            <button type="button" class="btn btn-light">Uusi auto</button>
+            <button type="button" class="btn btn-success">Tallenna</button>
+        </div>
       </div>
     </nav>
     <transition name="slide">

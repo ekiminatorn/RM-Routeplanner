@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Planner from '../views/planner/Planner.vue'
 import Places from '../views/planner/Places.vue'
+import Vehicles from '../views/planner/Vehicles.vue'
 
 Vue.use(VueRouter)
 
@@ -20,9 +21,15 @@ const routes = [
     {
         path: '/planner/places',
         component: Places
+    },
+    {
+        path: '/planner/vehicles',
+        name: 'Vehicles',
+        component: Vehicles
     }
     ]
   }
+
 ]
 
 const router = new VueRouter({

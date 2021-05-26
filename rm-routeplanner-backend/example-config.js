@@ -13,5 +13,6 @@ config.db_username = "username";
 config.db_password = "password";
 config.db_host = "localhost";
 config.db_port = 3306;
+config.db = "Database_name";
 
 module.exports = config;
