@@ -23,7 +23,7 @@ app.delete('/places', places.delete);
 app.get('/vehicles', vehicles.getAll);
 app.post('/vehicles', vehicles.add);
 app.put('/vehicles', vehicles.update);
-app.delete('/vehicles', vehicles.delete);
+app.delete('/vehicles/:id', vehicles.delete);
 
 
 

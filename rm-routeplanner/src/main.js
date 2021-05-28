@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import 'bootstrap';
 
 Vue.config.productionTip = false
 Vue.prototype.$apiURL = 'http://localhost:3000';
