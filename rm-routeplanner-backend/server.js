@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 
 let config = require("./config.js"); // Import configuration
@@ -9,6 +10,9 @@ let vehicles = require("./vehicles");
 
 app.use(cors());
 app.options('*', cors());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 
 // Places
@@ -22,7 +26,7 @@ app.delete('/places', places.delete);
 
 app.get('/vehicles', vehicles.getAll);
 app.post('/vehicles', vehicles.add);
-app.put('/vehicles', vehicles.update);
+app.put('/vehicles/:id', vehicles.update);
 app.delete('/vehicles/:id', vehicles.delete);
 
 

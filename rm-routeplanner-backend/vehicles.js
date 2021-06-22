@@ -17,6 +17,19 @@ exports.add = function(req, res) {
 };
 
 exports.update = function(req, res) {
+
+    let id = req.params.id;
+
+    let name = req.body.name;
+    let nickname = req.body.nickname;
+    let reg_plate = req.body.reg_plate;
+
+    db.query('UPDATE vehicles SET name = ?, nickname = ?, reg_plate = ? WHERE id = ?', [name, nickname, reg_plate, id], function(error, results, fields){
+        
+        if (error) return res.status(500).json({error: error});
+
+        return res.sendStatus(200);
+    })
     
 };
 

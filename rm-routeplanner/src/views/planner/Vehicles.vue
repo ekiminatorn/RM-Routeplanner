@@ -1,32 +1,37 @@
 <template>
   <div class="vehicles container">
-    <!-- Edit Modal -->
-    <div
-      class="modal fade"
-      id="editModal"
-      tabindex="-1"
-    >
+    <!-- Modal -->
+    <div class="modal fade" id="vehicleModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <h5 v-if="modalMode === 'edit'" class="modal-title">Päivitä ajoneuvo</h5>
+            <h5 v-if="modalMode === 'new'" class="modal-title">Lisää ajoneuvo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">...</div>
+          <!-- MODAL BODY -->
+          <div class="modal-body">
+            <form>
+              <div class="form-floating mb-3">
+                <input v-model="vehicle.reg_plate" type="text" class="form-control" id="regPlateEdit"/>
+                <label for="regPlateEdit">Rekisterikilpi</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input v-model="vehicle.name" type="text" class="form-control" id="vehicleNameEdit"/>
+                <label for="vehicleNameEdit">Nimi</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input v-model="vehicle.nickname" type="text" class="form-control" id="vehicleNicknameEdit"/>
+                <label for="vehicleNicknameEdit">Lempinimi</label>
+              </div>
+            </form>
+          </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sulje</button>
+            <button @click="updateVehicle(vehicle)" v-if="modalMode === 'edit'" :disabled="modalLoading" type="button" class="btn btn-success">
+               <span v-if="modalLoading" span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> 
+                Tallenna</button>
+            <button v-if="modal === 'new'" type="button" class="btn btn-success">Lisää auto</button>
           </div>
         </div>
       </div>
@@ -34,6 +39,7 @@
 
     <table class="table table-striped vehicle-table w-75">
       <thead>
+          <Spinner></Spinner>
         <tr>
           <th scope="col">Rekisterikilpi</th>
           <th scope="col">Nimi</th>
@@ -52,11 +58,7 @@
           <td>
             <div class="btn-group" role="group">
               <td>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  v-on:click="showEditModal()"
-                >
+                <button type="button" class="btn btn-primary" v-on:click="editVehicle(index, vehicle)">
                   <i class="bi bi-pencil-square"></i>
                 </button>
               </td>
@@ -79,13 +81,28 @@
 
 <script>
 import axios from "axios";
-import * as Bootstrap from 'bootstrap';
+import * as Bootstrap from "bootstrap";
+
+import Spinner from "@/components/planner/Spinner.vue";
 
 export default {
   name: "Vehicles",
+  components: {
+    Spinner,
+  },
   data: function () {
     return {
-      vehicles: null,
+      vehicles: [],
+      modalMode: null,
+      activeVehicle: null,
+      modalLoading: false,
+      modal: null,
+      vehicle: {
+        reg_plate: null,
+        name: null,
+        nickname: null,
+        id: null,
+      },
     };
   },
 
@@ -93,6 +110,8 @@ export default {
     axios
       .get(this.$apiURL + "/vehicles")
       .then((response) => (this.vehicles = response.data));
+
+    this.modal = new Bootstrap.Modal(document.getElementById("vehicleModal"));
   },
 
   methods: {
@@ -105,15 +124,41 @@ export default {
             console.log(response);
             //Delete from vehicles data array. Vue reacts to change and updates view
             this.$delete(this.vehicles, index);
+            //Display toast to confirm deletion
+            this.$toast.success("Ajoneuvo poistettu");
           })
           .catch((error) => alert(error)); //Display error with alert box
       }
     },
-    showEditModal: function () {
-      let editModal = new Bootstrap.Modal(
-        document.getElementById("editModal")
-      );
-      editModal.show();
+
+    editVehicle: function (index, vehicle) {
+      this.modalMode = "edit";
+      this.vehicle = JSON.parse(JSON.stringify(vehicle)); //JSON stringify and parse back to object => Remove reactiviness when changing data
+      this.activeVehicle = index;
+      this.modal.show();
+      console.log(this.vehicle);
+    },
+
+    updateVehicle: function (vehicle) {
+      this.modalLoading = true;
+      axios
+        .put(this.$apiURL + "/vehicles/" + vehicle.id, {
+          name: vehicle.name,
+          nickname: vehicle.nickname,
+          reg_plate: vehicle.reg_plate,
+        })
+        .then((response) => {
+          console.log(response);
+          this.modal.hide();
+          this.modalLoading = false;
+          this.$toast.success("Ajoneuvo päivitetty");
+        })
+        .catch((error) => {
+          this.$toast.error("Virhetilanne. Virhe: " + error);
+          this.modalLoading = false;
+        });
+
+      this.$set(this.vehicles, this.activeVehicle, this.vehicle);
     },
   },
 };
