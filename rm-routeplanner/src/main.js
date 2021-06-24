@@ -8,7 +8,8 @@ import VueToasts from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 
 Vue.use(VueToasts, {
-    position: 'bottom'
+    position: 'bottom',
+    duration: 5000
 });
 
 Vue.config.productionTip = false

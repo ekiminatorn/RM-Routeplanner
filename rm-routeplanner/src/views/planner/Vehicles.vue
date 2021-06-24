@@ -1,5 +1,7 @@
 <template>
   <div class="vehicles container">
+    <!-- Spinner -->
+    <Spinner v-if="loading"></Spinner>
     <!-- Modal -->
     <div class="modal fade" id="vehicleModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -39,7 +41,6 @@
 
     <table class="table table-striped vehicle-table w-75">
       <thead>
-          <Spinner></Spinner>
         <tr>
           <th scope="col">Rekisterikilpi</th>
           <th scope="col">Nimi</th>
@@ -96,6 +97,7 @@ export default {
       modalMode: null,
       activeVehicle: null,
       modalLoading: false,
+      loading: true,
       modal: null,
       vehicle: {
         reg_plate: null,
@@ -109,7 +111,14 @@ export default {
   mounted: function () {
     axios
       .get(this.$apiURL + "/vehicles")
-      .then((response) => (this.vehicles = response.data));
+      .then((response) => {
+        this.vehicles = response.data
+        this.loading = false;
+      })
+      .catch((error) => {
+        this.$toast.error("Virhe noudettaessa tietoja tietokannasta: " + error);
+        this.loading = false; 
+      });
 
     this.modal = new Bootstrap.Modal(document.getElementById("vehicleModal"));
   },

@@ -1,8 +1,8 @@
 <template>
-
-    <div class="spinner-grow custom-spinner" role="status"></div>
-
-    
+  <div>
+    <div class="opacity"></div>
+    <div class="spinner"></div>
+  </div>
 </template>
 
 <script>
@@ -16,11 +16,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.custom-spinner {
-  position: absolute;
+
+.opacity {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.3;
+  background-color: gray;
+}
+
+.spinner {
+  position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 100000;
-  opacity: 0.5;
+  width: 5rem;
+  height: 5rem;
+  background-color: $rainmaker-color;
+  z-index: 1001;
+  border-radius: 100%;  
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
 }
 </style>
