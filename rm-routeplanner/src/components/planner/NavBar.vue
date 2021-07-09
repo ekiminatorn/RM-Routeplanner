@@ -12,7 +12,7 @@
 
         <!-- Planner Vehicles buttons -->
         <div v-if="pagePath === '/planner/vehicles'">
-            <button type="button" class="btn btn-light">Uusi auto</button>
+            <button @click="emitNavbarEvent" id="nav_button_newVehicle" type="button" class="btn btn-light">Uusi auto</button>
         </div>
       </div>
     </nav>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/components/planner/event-bus';
+
 export default {
   name: "NavBar",
   data: function () {
@@ -45,6 +47,16 @@ export default {
           document.getElementById("planner").style.marginLeft = "0px";
       }
     },
+    emitNavbarEvent: function (event) {
+      //Emit event based on the ID of the button
+      switch(event.target.id) {
+        case "nav_button_newVehicle":
+          EventBus.$emit('nav_button_newVehicle', event);
+          break;
+        default:
+          console.log("Default case");
+      }
+    }
   },
   watch: {
       $route: function () {

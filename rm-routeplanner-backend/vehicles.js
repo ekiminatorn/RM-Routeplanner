@@ -13,6 +13,16 @@ exports.getAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
+
+    let name = req.body.name;
+    let nickname = req.body.nickname;
+    let reg_plate = req.body.reg_plate;
+
+    db.query('INSERT INTO vehicles (name, nickname, reg_plate) VALUES(?, ?, ?)', [name, nickname, reg_plate], function(error, results, fields){
+        if (error) return res.status(500).json({error: error});
+        
+        return res.json(results);
+    })
     
 };
 
