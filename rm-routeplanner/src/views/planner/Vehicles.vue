@@ -233,7 +233,7 @@ export default {
           this.modalLoading = false;
         });
 
-      this.$set(this.vehicles, this.activeVehicle, this.vehicle);
+      this.$set(this.vehicles, this.activeVehicle, JSON.parse(JSON.stringify(vehicle))); //JSON stringify and parse back to object => Remove reactiviness when changing data
     },
 
     newVehicle: function () {
