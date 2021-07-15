@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="opacity"></div>
+    <div class="spinner-container">
     <div class="spinner"></div>
+    <div class="loading-text"></div>
+    </div>
   </div>
 </template>
 
@@ -28,6 +31,18 @@ export default {
   background-color: gray;
 }
 
+.spinner-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.loading-text {
+    position: absolute;
+    
+}
+
 .spinner {
   position: fixed;
   top: 50%;
@@ -39,6 +54,7 @@ export default {
   border-radius: 100%;  
   -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
   animation: sk-scaleout 1.0s infinite ease-in-out;
+  transform: translate(-50%, -50%);
 }
 
 @-webkit-keyframes sk-scaleout {

@@ -14,6 +14,11 @@
         <div v-if="pagePath === '/planner/vehicles'">
             <button @click="emitNavbarEvent" id="nav_button_newVehicle" type="button" class="btn btn-light">Uusi auto</button>
         </div>
+
+        <!-- Planner Drivers buttons -->
+        <div v-if="pagePath === '/planner/drivers'">
+            <button @click="emitNavbarEvent" id="nav_button_newDriver" type="button" class="btn btn-light">Uusi kuljettaja</button>
+        </div>
       </div>
     </nav>
     <transition name="slide">
@@ -28,48 +33,50 @@
 </template>
 
 <script>
-import { EventBus } from '@/components/planner/event-bus';
+import { EventBus } from "@/components/planner/event-bus";
 
 export default {
   name: "NavBar",
   data: function () {
     return {
       displaySidebar: false,
-      pagePath: this.$route.path
+      pagePath: this.$route.path,
     };
   },
   methods: {
     toggleSidebar: function () {
       this.displaySidebar = !this.displaySidebar;
-      if(this.displaySidebar) {
-          document.getElementById("planner").style.marginLeft = "250px";
+      if (this.displaySidebar) {
+        document.getElementById("planner").style.marginLeft = "250px";
       } else {
-          document.getElementById("planner").style.marginLeft = "0px";
+        document.getElementById("planner").style.marginLeft = "0px";
       }
     },
     emitNavbarEvent: function (event) {
       //Emit event based on the ID of the button
-      switch(event.target.id) {
+      switch (event.target.id) {
         case "nav_button_newVehicle":
-          EventBus.$emit('nav_button_newVehicle', event);
+          EventBus.$emit("nav_button_newVehicle", event);
           break;
+        case "nav_button_newDriver":
+            EventBus.$emit("nav_button_newDriver", event);
+            break;
         default:
           console.log("Default case");
       }
-    }
+    },
   },
   watch: {
-      $route: function () {
-          this.pagePath = this.$route.path;
-      }
+    $route: function () {
+      this.pagePath = this.$route.path;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .navbar {
-    z-index: 20;
+  z-index: 20;
 }
 /* The sidebar menu */
 .sidebar {
@@ -99,11 +106,13 @@ export default {
   color: #575555;
 }
 
-.slide-enter, .slide-leave-to {
-    width: 0px;
+.slide-enter,
+.slide-leave-to {
+  width: 0px;
 }
 
-.slide-enter-to, .slide-leave {
-    width: 250px;
+.slide-enter-to,
+.slide-leave {
+  width: 250px;
 }
 </style>

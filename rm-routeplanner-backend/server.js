@@ -7,6 +7,7 @@ let config = require("./config.js"); // Import configuration
 
 let places = require("./places");
 let vehicles = require("./vehicles");
+let drivers = require("./drivers");
 
 app.use(cors());
 app.options('*', cors());
@@ -29,6 +30,12 @@ app.post('/vehicles', vehicles.add);
 app.put('/vehicles/:id', vehicles.update);
 app.delete('/vehicles/:id', vehicles.delete);
 
+// Drivers
+
+app.get('/drivers', drivers.getAll);
+app.post('/drivers', drivers.add);
+app.put('/drivers/:id', drivers.update);
+app.delete('/drivers/:id', drivers.delete);
 
 
 app.get('/', (req, res) => {

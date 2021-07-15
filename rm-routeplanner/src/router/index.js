@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Planner from '../views/planner/Planner.vue'
 import Places from '../views/planner/Places.vue'
 import Vehicles from '../views/planner/Vehicles.vue'
+import Drivers from '../views/planner/Drivers.vue'
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,11 @@ const routes = [
         path: '/planner/vehicles',
         name: 'Vehicles',
         component: Vehicles
+    },
+    {
+        path: '/planner/drivers',
+        name: 'Drivers',
+        component: Drivers
     }
     ]
   }
