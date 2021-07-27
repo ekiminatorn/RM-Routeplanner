@@ -4,10 +4,10 @@
       <div class="container-fluid">
         <div v-on:click="toggleSidebar" class="navbar-brand bi-list" style="padding-left: 20px; padding-top: 0; padding-bottom: 0; margin: 0; font-size: 2em"></div>
         <!-- Customize navbar based on what page we are on -->
-        <!-- Planner Places -->
+
+        <!-- Planner Places buttons-->
         <div v-if="pagePath === '/planner/places'">
-            <button type="button" class="btn btn-light">Uusi kohde</button>
-            <button type="button" class="btn btn-success">Tallenna</button>
+            <button @click="emitNavbarEvent" id="nav_button_newPlace" type="button" class="btn btn-light">Uusi kohde</button>
         </div>
 
         <!-- Planner Vehicles buttons -->
@@ -59,8 +59,11 @@ export default {
           EventBus.$emit("nav_button_newVehicle", event);
           break;
         case "nav_button_newDriver":
-            EventBus.$emit("nav_button_newDriver", event);
-            break;
+          EventBus.$emit("nav_button_newDriver", event);
+          break;
+        case "nav_button_newPlace":
+          EventBus.$emit("nav_button_newPlace", event);
+          break;
         default:
           console.log("Default case");
       }
