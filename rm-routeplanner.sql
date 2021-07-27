@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2021 at 03:27 PM
+-- Generation Time: Jul 27, 2021 at 06:20 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.27
 
@@ -45,7 +45,7 @@ CREATE TABLE `places` (
   `name` text NOT NULL,
   `opening_time` varchar(255) NOT NULL,
   `closing_time` varchar(255) NOT NULL,
-  `24h` tinyint(1) NOT NULL,
+  `twentyfourseven` tinyint(1) NOT NULL,
   `lat` varchar(255) NOT NULL,
   `lon` varchar(255) NOT NULL,
   `json_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`json_data`))
