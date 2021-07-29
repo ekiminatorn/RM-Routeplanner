@@ -20,8 +20,8 @@ app.use(express.json());
 
 app.get('/places', places.getAll);
 app.post('/places', places.add);
-app.put('/places', places.update);
-app.delete('/places', places.delete);
+app.put('/places/:id', places.update);
+app.delete('/places/:id', places.delete);
 
 // Vehicles
 

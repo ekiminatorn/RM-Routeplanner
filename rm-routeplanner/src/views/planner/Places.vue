@@ -26,14 +26,61 @@
           <div class="modal-body">
             <form ref="form">
               <div class="form-floating mb-3">
-                <input
-                  v-model="place.name"
-                  type="text"
-                  class="form-control"
-                  id="nameEdit"
-                />
+                <input v-model="place.name" type="text" class="form-control" id="nameEdit" required/>
                 <label for="nameEdit">Kohde</label>
               </div>
+
+							<div class="row">
+								<div class="col">
+              <div class="form-floating mb-3">
+                <input v-model="place.opening_time" type="text" class="form-control" id="openingEdit"/>
+                <label for="openingEdit">Auki</label>
+              </div>
+							</div>
+							<div class="col">
+              <div class="form-floating mb-3">
+                <input v-model="place.closing_time" type="text" class="form-control" id="closingEdit"/>
+                <label for="closingEdit">Kiinni</label>
+              </div>
+							</div>
+							<div class="col">
+              <div class="form-check form-switch">
+                <label class="form-check-label" for="twentyfourseven">24h?</label>
+                <input v-model="place.twentyfourseven" :true-value="1" :false-value="0" class="form-check-input" type="checkbox" id="twentyfourseven">
+								
+              </div>
+							</div>
+							</div>
+
+							<div class="row">
+								<div class="col">
+									<div class="form-floating mb-3">
+										<input v-model="place.json_data.defaultPromoPlace" type="text" class="form-control" id="promoPlaceEdit"/>
+										<label for="promoPlaceEdit">Oletus promopaikka</label>
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-floating mb-3">
+										<input v-model="place.json_data.defaultNewspapers" type="text" class="form-control" id="newspapersEdit"/>
+										<label for="newspapersEdit">Oletus lehtimäärä</label>
+									</div>
+								</div>
+							</div>
+
+              <div class="row">
+                <div class="col">
+                <div class="form-floating mb-3">
+                <input v-model="place.lat" type="text" class="form-control" id="latEdit"/>
+                <label for="latEdit">Latitude</label>
+              </div>
+                </div>
+                <div class="col">
+                <div class="form-floating mb-3">
+                <input v-model="place.lon" type="text" class="form-control" id="lonEdit"/>
+                <label for="lonEdit">Longitude</label>
+              </div>
+                </div>
+               </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -150,7 +197,7 @@ export default {
         twentyfourseven: "",
         lat: "",
         lon: "",
-        json_data: "",
+        json_data: {},
         id: "",
       },
     };
@@ -161,7 +208,7 @@ export default {
       .then((response) => {
         this.places = response.data;
         this.loading = false;
-        console.log(response);
+        console.log(response.data.json_data);
       })
       .catch((error) => {
         this.$toast.error("Virhe noudettaessa tietoja tietokannasta: " + error);
@@ -196,16 +243,31 @@ export default {
       this.place = JSON.parse(JSON.stringify(place)); //JSON stringify and parse back to object => remove reactiviness when changing data
       this.activePlace = index;
       this.modal.show();
-      // Experimenting down below with JSON data
-      let store = JSON.parse(place.json_data);
-      console.log(store.defaultPromoPlace);
-      store.defaultPromoPlace = "1B";
-      console.log(JSON.stringify(store));
-      // End of experimenting
     },
 
     updatePlace: function (place) {
-      console.log(place);
+      this.modalLoading = true;
+
+			axios.put(this.$apiURL + "/places/" + place.id, {
+				name: place.name,
+				opening_time: place.opening_time,
+				closing_time: place.closing_time,
+				twentyfourseven: place.twentyfourseven,
+				lat: place.lat,
+				lon: place.lon,
+				json_data: place.json_data
+			})
+			.then((response) => {
+				console.log(response);
+				this.modal.hide();
+				this.modalLoading = false;
+				this.$set(this.places, this.activePlace, JSON.parse(JSON.stringify(place))); //JSON stringify and parse back to object => Remove reactiviness when changing data
+				this.$toast.success("Kohde päivitetty");
+			})
+			.catch((error) => {
+				this.$toast.error("Virhetilanne. Virhe: " + error);
+				this.modalLoading = false;
+			})
     },
 
     newPlace: function () {
@@ -215,10 +277,35 @@ export default {
       var self = this;
       Object.keys(this.place).forEach(function (key) {
         self.place[key] = "";
+				// json_data has to be treated differently. Here we create an empty object instead of a string
+				if (key == "json_data") { self.place[key] = {} }
+				console.log(key);
       });
       this.activeDriver = null;
       this.modal.show();
     },
+
+		submitNewPlace: function (place) {
+			this.modalLoading = true;
+
+			axios.post(this.$apiURL + "/places", {
+				name: place.name,
+				opening_time: place.opening_time,
+				closing_time: place.closing_time,
+				twentyfourseven: place.twentyfourseven,
+				lat: place.lat,
+				lon: place.lon,
+				json_data: place.json_data
+			})
+			.then((response) => {
+				console.log(response);
+				place.id = response.data.insertId; //Get the ID and add to the place
+				this.places.push(JSON.parse(JSON.stringify(place)));  //JSON stringify and parse back to object => Remove reactiviness when changing data
+				this.modal.hide();
+				this.modalLoading = false;
+				this.$toast.success("Kohde lisätty");
+			});
+		},
 
     clickHandler: function (event) {
       switch (event.target.id) {
@@ -235,4 +322,15 @@ export default {
 
 
 <style lang="scss" scoped>
+
+.custom-control-label::before, 
+.custom-control-label::after {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  margin: 1rem;
+}
+.custom-control-label{
+  margin: 1.5rem 2rem;
+}
+
 </style>
