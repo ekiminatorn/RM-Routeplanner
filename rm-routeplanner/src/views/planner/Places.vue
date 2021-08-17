@@ -3,7 +3,6 @@
 
             <!-- Spinner -->
     <Spinner v-if="loading"></Spinner>
-
     <!-- Modal -->
     <div class="modal fade" id="placeModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -81,7 +80,11 @@
               </div>
                 </div>
                </div>
+
+               <PlacesMap ref="PlacesMap" @updatedCoords="updateCoords" :propLat=place.lat :propLon=place.lon></PlacesMap>
+
             </form>
+            
           </div>
           <div class="modal-footer">
             <button
@@ -175,12 +178,14 @@ import axios from "axios";
 import * as Bootstrap from "bootstrap";
 
 import Spinner from "@/components/planner/Spinner.vue";
+import PlacesMap from "@/components/planner/PlacesMap.vue";
 import { EventBus } from "@/components/planner/event-bus";
 
 export default {
   name: "Places",
   components: {
     Spinner,
+    PlacesMap,
   },
   data: function () {
     return {
@@ -243,31 +248,41 @@ export default {
       this.place = JSON.parse(JSON.stringify(place)); //JSON stringify and parse back to object => remove reactiviness when changing data
       this.activePlace = index;
       this.modal.show();
+
+      //Delay for a little bit to allow the modal to display, and then recenter the map
+      setTimeout(() => {
+        this.$refs.PlacesMap.map.invalidateSize();
+      }, 300);
     },
 
     updatePlace: function (place) {
       this.modalLoading = true;
 
-			axios.put(this.$apiURL + "/places/" + place.id, {
-				name: place.name,
-				opening_time: place.opening_time,
-				closing_time: place.closing_time,
-				twentyfourseven: place.twentyfourseven,
-				lat: place.lat,
-				lon: place.lon,
-				json_data: place.json_data
-			})
-			.then((response) => {
-				console.log(response);
-				this.modal.hide();
-				this.modalLoading = false;
-				this.$set(this.places, this.activePlace, JSON.parse(JSON.stringify(place))); //JSON stringify and parse back to object => Remove reactiviness when changing data
-				this.$toast.success("Kohde päivitetty");
-			})
-			.catch((error) => {
-				this.$toast.error("Virhetilanne. Virhe: " + error);
-				this.modalLoading = false;
-			})
+      axios
+        .put(this.$apiURL + "/places/" + place.id, {
+          name: place.name,
+          opening_time: place.opening_time,
+          closing_time: place.closing_time,
+          twentyfourseven: place.twentyfourseven,
+          lat: place.lat,
+          lon: place.lon,
+          json_data: place.json_data,
+        })
+        .then((response) => {
+          console.log(response);
+          this.modal.hide();
+          this.modalLoading = false;
+          this.$set(
+            this.places,
+            this.activePlace,
+            JSON.parse(JSON.stringify(place))
+          ); //JSON stringify and parse back to object => Remove reactiviness when changing data
+          this.$toast.success("Kohde päivitetty");
+        })
+        .catch((error) => {
+          this.$toast.error("Virhetilanne. Virhe: " + error);
+          this.modalLoading = false;
+        });
     },
 
     newPlace: function () {
@@ -277,35 +292,43 @@ export default {
       var self = this;
       Object.keys(this.place).forEach(function (key) {
         self.place[key] = "";
-				// json_data has to be treated differently. Here we create an empty object instead of a string
-				if (key == "json_data") { self.place[key] = {} }
-				console.log(key);
+        // json_data has to be treated differently. Here we create an empty object instead of a string
+        if (key == "json_data") {
+          self.place[key] = {};
+        }
+        console.log(key);
       });
       this.activeDriver = null;
       this.modal.show();
+
+      //Delay for a little bit to allow the modal to display, and then recenter the map
+      setTimeout(() => {
+        this.$refs.PlacesMap.map.invalidateSize();
+      }, 300);
     },
 
-		submitNewPlace: function (place) {
-			this.modalLoading = true;
+    submitNewPlace: function (place) {
+      this.modalLoading = true;
 
-			axios.post(this.$apiURL + "/places", {
-				name: place.name,
-				opening_time: place.opening_time,
-				closing_time: place.closing_time,
-				twentyfourseven: place.twentyfourseven,
-				lat: place.lat,
-				lon: place.lon,
-				json_data: place.json_data
-			})
-			.then((response) => {
-				console.log(response);
-				place.id = response.data.insertId; //Get the ID and add to the place
-				this.places.push(JSON.parse(JSON.stringify(place)));  //JSON stringify and parse back to object => Remove reactiviness when changing data
-				this.modal.hide();
-				this.modalLoading = false;
-				this.$toast.success("Kohde lisätty");
-			});
-		},
+      axios
+        .post(this.$apiURL + "/places", {
+          name: place.name,
+          opening_time: place.opening_time,
+          closing_time: place.closing_time,
+          twentyfourseven: place.twentyfourseven,
+          lat: place.lat,
+          lon: place.lon,
+          json_data: place.json_data,
+        })
+        .then((response) => {
+          console.log(response);
+          place.id = response.data.insertId; //Get the ID and add to the place
+          this.places.push(JSON.parse(JSON.stringify(place))); //JSON stringify and parse back to object => Remove reactiviness when changing data
+          this.modal.hide();
+          this.modalLoading = false;
+          this.$toast.success("Kohde lisätty");
+        });
+    },
 
     clickHandler: function (event) {
       switch (event.target.id) {
@@ -316,21 +339,24 @@ export default {
           console.log("Default case");
       }
     },
+
+    updateCoords: function (event) {
+      this.place.lat = event.lat;
+      this.place.lon = event.lng;
+    },
   },
 };
 </script>
 
 
 <style lang="scss" scoped>
-
-.custom-control-label::before, 
+.custom-control-label::before,
 .custom-control-label::after {
   width: 2.25rem !important;
   height: 2.25rem !important;
   margin: 1rem;
 }
-.custom-control-label{
+.custom-control-label {
   margin: 1.5rem 2rem;
 }
-
 </style>
