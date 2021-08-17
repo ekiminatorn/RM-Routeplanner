@@ -50,6 +50,15 @@ exports.update = function (req, res) {
 
 };
 
-exports.delete = function (req, res) {
+exports.delete = async function(req, res) {
 
+    let id = req.params.id;
+
+    db.query('DELETE FROM places WHERE id = ?', id , function(error, results, fields){
+
+        if (error) return res.status(500).json({error: error});
+        
+        return res.json(results);
+    })
+    
 };
