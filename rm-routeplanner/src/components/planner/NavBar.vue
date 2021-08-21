@@ -23,7 +23,7 @@
     </nav>
     <transition name="slide">
     <div v-if="displaySidebar" id="sidebar" class="sidebar">
-      <router-link to="/planner">Reittisuunnittelu</router-link>
+      <router-link to="/planner/routes">Reitit</router-link>
       <router-link to="/planner/places">Kohteet</router-link>
       <router-link to="/planner/drivers">Kuljettajat</router-link>
       <router-link to="/planner/vehicles">Ajoneuvot</router-link>
