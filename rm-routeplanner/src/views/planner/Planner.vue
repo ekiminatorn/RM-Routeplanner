@@ -23,6 +23,9 @@ export default {
 
 .planner {
     transition: margin-left .5s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 </style>
