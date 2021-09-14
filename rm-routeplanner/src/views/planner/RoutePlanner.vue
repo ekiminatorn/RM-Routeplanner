@@ -3,9 +3,9 @@
     <PlannerMap> </PlannerMap>
 
 
-    <div v-for="(element, index) in shifts" :key="element.routeId" v-drag="{ handle: '#card-header' }" class="rm-card card">
+    <div v-for="(element, index) in shifts" :key="element.routeId" v-drag class="rm-card card">
       <div class="card-body">
-        <div class="rm-card-header" id="card-header">
+        <div class="rm-card-header" :id="index">
           <h5 class="card-title rm-card-title">Reitti {{ index }}</h5>
           <h5 class="rm-card-options bi bi-three-dots-vertical"></h5>
         </div>
@@ -13,16 +13,18 @@
           <draggable :list="element.waypoints" group="routes" handle=".handle">
           <el-collapse-item v-for="(waypoint, index) in element.waypoints" :key="waypoint.id" :name="index">
             <template slot="title" class="user-select-none">
-              <i class="bi bi-arrows-move handle"></i>
+                <div class="handle">
+              <i class="bi bi-arrows-move"></i>
               {{ waypoint.name }}
               <span class="ms-1 badge rounded-pill bg-primary">HS</span>
               <span class="ms-1 badge rounded-pill bg-warning">Lehdet</span>
               <span class="ms-1 badge rounded-pill bg-info"> 19:00</span>
+              </div>
             </template>
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row justify-content-evenly align-items-center">
             <select class="">
-              <option selected>Projekti</option>
-              <option value="1">HS</option>
+              <option>Projekti</option>
+              <option value="1" selected>HS</option>
               <option value="2">Fortum</option>
             </select>
             <el-radio-group v-model="radio4" size="mini">
@@ -30,6 +32,9 @@
               <el-radio-button label="Lehdet"></el-radio-button>
               <el-radio-button label="Purku"></el-radio-button>
             </el-radio-group>
+            </div>
+            <div class="d-flex flex-row">
+                <el-input-number size="mini" v-model="num4"></el-input-number>
             </div>
           </el-collapse-item>
           </draggable>
@@ -63,7 +68,8 @@ import PlannerMap from "@/components/planner/PlannerMap.vue";
 export default {
   name: "RoutePlanner",
   components: {
-    PlannerMap, draggable
+    PlannerMap,
+    draggable,
   },
   data: function () {
     return {
@@ -71,14 +77,21 @@ export default {
       mode: null,
       accordionMode: false,
       radio4: "Lehdet",
+      num4: 2,
       shifts: [
         {
           routeId: "11",
-          waypoints: [{ id: "1", name:"Tripla" }, { id: "2", name:"Citycenter" }],
+          waypoints: [
+            { id: "1", name: "Tripla" },
+            { id: "2", name: "Citycenter" },
+          ],
         },
         {
           routeId: "12",
-          waypoints: [{ id: "1", name:"Redi" }, { id: "2", name:"Hertsi" }],
+          waypoints: [
+            { id: "1", name: "Redi" },
+            { id: "2", name: "Hertsi" },
+          ],
         },
       ],
     };
