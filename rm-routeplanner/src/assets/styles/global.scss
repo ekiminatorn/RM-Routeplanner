@@ -29,3 +29,11 @@ body {
 .el-radio-button--mini .el-radio-button__inner {
     padding: 2px 8px !important;
 }
+
+.el-input-number--mini {
+    width: 80px !important;
+}
+
+.el-input-number--mini .el-input-number__decrease, .el-input-number--mini .el-input-number__increase {
+    width: 20px !important;
+}

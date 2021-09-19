@@ -3,9 +3,9 @@
     <PlannerMap> </PlannerMap>
 
 
-    <div v-for="(element, index) in shifts" :key="element.routeId" v-drag class="rm-card card">
+    <div v-for="(element, index) in shifts" :key="index" v-drag="{handle: '.rm-card-header'}" class="rm-card card">
       <div class="card-body">
-        <div class="rm-card-header" :id="index">
+        <div class="rm-card-header">
           <h5 class="card-title rm-card-title">Reitti {{ index }}</h5>
           <h5 class="rm-card-options bi bi-three-dots-vertical"></h5>
         </div>
@@ -13,28 +13,32 @@
           <draggable :list="element.waypoints" group="routes" handle=".handle">
           <el-collapse-item v-for="(waypoint, index) in element.waypoints" :key="waypoint.id" :name="index">
             <template slot="title" class="user-select-none">
-                <div class="handle">
+                <div class="handle user-select-none">
               <i class="bi bi-arrows-move"></i>
               {{ waypoint.name }}
-              <span class="ms-1 badge rounded-pill bg-primary">HS</span>
-              <span class="ms-1 badge rounded-pill bg-warning">Lehdet</span>
-              <span class="ms-1 badge rounded-pill bg-info"> 19:00</span>
+              <span class="ms-1 badge rounded-pill bg-primary">{{waypoint.project}}</span>
+              <span class="ms-1 badge rounded-pill bg-warning">{{waypoint.taskType}}</span>
+              <span class="ms-1 badge rounded-pill bg-info"> {{waypoint.time}}</span>
               </div>
             </template>
-            <div class="d-flex flex-row justify-content-evenly align-items-center">
-            <select class="">
+            <div class="d-flex flex-row justify-content-evenly align-items-center user-select-none">
+            <select v-model="waypoint.project" class="">
               <option>Projekti</option>
-              <option value="1" selected>HS</option>
-              <option value="2">Fortum</option>
+              <option value="HS" selected>HS</option>
+              <option value="Fortum">Fortum</option>
             </select>
-            <el-radio-group v-model="radio4" size="mini">
+            <el-radio-group v-model="waypoint.taskType" size="mini">
               <el-radio-button label="Rakennus"></el-radio-button>
               <el-radio-button label="Lehdet"></el-radio-button>
               <el-radio-button label="Purku"></el-radio-button>
             </el-radio-group>
+            <el-input-number size="mini" v-model="waypoint.tableQuantity"></el-input-number>
             </div>
-            <div class="d-flex flex-row">
-                <el-input-number size="mini" v-model="num4"></el-input-number>
+            <div class="d-flex flex-row justify-content-evenly align-items-center user-select-none">
+                <input type="text" v-model="waypoint.promoPlace" id="promopaikka" name="promopaikka" placeholder="Promo" class="small-input user-select-none">
+                <input type="text" v-model="waypoint.time" id="kellonaika" name="kellonaika" placeholder="Kello" class="small-input user-select-none">
+                <input type="text" id="lehdet" name="lehdet" placeholder="Lehdet" class="small-input user-select-none">
+                
             </div>
           </el-collapse-item>
           </draggable>
@@ -76,21 +80,27 @@ export default {
       loading: true,
       mode: null,
       accordionMode: false,
-      radio4: "Lehdet",
-      num4: 2,
       shifts: [
         {
-          routeId: "11",
+          routeId: 1337,
+          date: "",
+          startTime: "",
+          vehicle: "",
+          driver: "",
           waypoints: [
-            { id: "1", name: "Tripla" },
-            { id: "2", name: "Citycenter" },
+            { id: "1", project: "HS", name: "Tripla", taskType: "Lehdet", tableQuantity: 0, promoPlace: "2B", time: "17:00" },
+            { id: "2", project: "HS", name: "Citycenter", taskType: "Lehdet", tableQuantity: 0, promoPlace: "2B", time: "17:00" },
           ],
         },
         {
-          routeId: "12",
+          routeId: 1339,
+          date: "",
+          startTime: "",
+          vehicle: "",
+          driver: "",
           waypoints: [
-            { id: "1", name: "Redi" },
-            { id: "2", name: "Hertsi" },
+            { id: "1", project: "HS", name: "Redi", taskType: "Lehdet", tableQuantity: 0, promoPlace: "2B", time: "17:00" },
+            { id: "2", project: "HS", name: "Hertsi", taskType: "Lehdet", tableQuantity: 0, promoPlace: "2B", time: "17:00" },
           ],
         },
       ],
@@ -153,5 +163,10 @@ export default {
 
 .list-group-item {
   cursor: move;
+}
+
+.small-input {
+    width: 70px;
+    height: 20px;
 }
 </style>

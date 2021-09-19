@@ -27,7 +27,7 @@ const routes = [
         component: RouteListing,
       },
       {
-        path: 'routes/edit/:id',
+        path: 'routes/edit/:routeid',
         component: RoutePlanner
       },
       {

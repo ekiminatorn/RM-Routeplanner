@@ -19,6 +19,11 @@
         <div v-if="pagePath === '/planner/drivers'">
             <button @click="emitNavbarEvent" id="nav_button_newDriver" type="button" class="btn btn-light">Uusi kuljettaja</button>
         </div>
+
+        <!-- Route planner components -->
+        <div v-if="pagePath == '/planner/routes/edit/2'">
+            <button @click="emitNavbarEvent" id="nav_button_newDriver" type="button" class="btn btn-light">Uusi kuljettaja</button>
+        </div>
       </div>
     </nav>
     <transition name="slide">
@@ -50,6 +55,7 @@ export default {
         document.getElementById("planner").style.marginLeft = "250px";
       } else {
         document.getElementById("planner").style.marginLeft = "0px";
+        console.log(this.$route.params);
       }
     },
     emitNavbarEvent: function (event) {
